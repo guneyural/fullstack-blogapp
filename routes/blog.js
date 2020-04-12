@@ -7,7 +7,17 @@ const isCommentOwner = require('../middleware/isCommentOwner');
 
 router.get('/', async (req, res)=>{
     const blogs = await Blog.find();
-
+    
+    if(req.query.search){
+        const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+        const getBlogs = await Blog.find({$or:[{title: regex},{description: regex}]}).sort({date: 'desc'});
+        if(getBlogs.length > 0){
+            return res.json(getBlogs);
+        }else{
+            return res.json({msg: 'No blog found'});
+        }
+    }
+    
     res.json(blogs);
 });
 
@@ -76,5 +86,9 @@ router.delete('/:id/comment/:commentId', [auth, isCommentOwner], async(req, res)
     const comment = await Comment.findByIdAndRemove(req.params.commentId);
     res.json(comment);
 });
+
+function escapeRegex(text){
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
 
 module.exports = router;
