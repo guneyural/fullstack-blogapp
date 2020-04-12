@@ -7,11 +7,7 @@ const isCommentOwner = require('../middleware/isCommentOwner');
 
 router.get('/', async (req, res)=>{
     const blogs = await Blog.find();
-<<<<<<< HEAD
-
-=======
     
->>>>>>> 2b52a0bd1bb5085cd7e32247062174077b7655f8
     if(req.query.search){
         const regex = new RegExp(escapeRegex(req.query.search), 'gi');
         const getBlogs = await Blog.find({$or:[{title: regex},{description: regex}]}).sort({date: 'desc'});
@@ -21,11 +17,7 @@ router.get('/', async (req, res)=>{
             return res.json({msg: 'No blog found'});
         }
     }
-<<<<<<< HEAD
-
-=======
     
->>>>>>> 2b52a0bd1bb5085cd7e32247062174077b7655f8
     res.json(blogs);
 });
 
@@ -99,8 +91,4 @@ function escapeRegex(text){
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 }
 
-<<<<<<< HEAD
 module.exports = router;
-=======
-module.exports = router;
->>>>>>> 2b52a0bd1bb5085cd7e32247062174077b7655f8
