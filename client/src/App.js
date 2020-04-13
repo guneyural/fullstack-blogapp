@@ -7,13 +7,11 @@ class App extends Component {
     componentDidMount() {
         store.dispatch(loadUser());
     }
-
+    
     render() {
         return (
             <Provider store={store}>
-                <div>
-                    <h1>GÜNEY URAL</h1>
-                </div>
+                <h1 style={{fontFamily: 'helvetica'}}>guneyhonot</h1>
             </Provider>
         );
     }

@@ -25,8 +25,7 @@ export const loadUser = () => (dispatch, getState) => {
 export const registerUser = (firstName, lastName, username, email, password) => dispatch => {
     dispatch({ type: USER_LOADING });
 
-    const data = {firstName, lastName, username, email, password};
-    const body = JSON.stringify(data);
+    const body = {firstName, lastName, username, email, password};
 
     axios.post('/user/register', body)
     .then(user => {
@@ -41,12 +40,11 @@ export const registerUser = (firstName, lastName, username, email, password) => 
 export const loginUser = (email, password) => dispatch => {
     dispatch({ type: USER_LOADING });
 
-    const data = {email, password};
-    const body = JSON.stringify(data);
-
+    const body = {email, password};
+    
     axios.post('/user/login', body)
     .then(user => {
-        dispatch({ type: LOGIN_SUCCESS, payload: {token: user.data.token, user: user.data.token} });
+        dispatch({ type: LOGIN_SUCCESS, payload: {token: user.data.token, user: user.data.user} });
     })
     .catch(err => {
         dispatch(getErrors(err.response.data.msg, err.response.status));
