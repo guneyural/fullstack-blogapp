@@ -21,4 +21,3 @@ export const DELETE_BLOG = 'DELETE_BLOG';
 export const ADD_COMMENT = 'ADD_COMMENT';
 export const EDIT_COMMENT = 'EDIT_COMMENT';
 export const DELETE_COMMENT = 'DELETE_COMMENT';
-export const COMMENT_ERROR = 'COMMENT_ERROR';

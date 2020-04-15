@@ -1,35 +1,57 @@
 const router = require('express').Router();
 const Blog = require('../models/blog');
 const Comment = require('../models/comment');
+const User = require('../models/user');
 const auth = require('../middleware/auth');
 const isBlogOwner = require('../middleware/isBlogOwner');
 const isCommentOwner = require('../middleware/isCommentOwner');
 
 router.get('/', async (req, res)=>{
-    const blogs = await Blog.find();
-    
     if(req.query.search){
         const regex = new RegExp(escapeRegex(req.query.search), 'gi');
         const getBlogs = await Blog.find({$or:[{title: regex},{description: regex}]}).sort({date: 'desc'});
         if(getBlogs.length > 0){
-            return res.json(getBlogs);
+            getBlogs
+            .populate('ownerId')
+            .sort({ date: 'desc' })
+            .exec((err, doc)=>{
+                if(err) return err;
+                return res.json(doc);    
+            })
         }else{
             return res.json({msg: 'No blog found'});
         }
     }
     
-    res.json(blogs);
+    Blog
+    .find()
+    .populate('ownerId')
+    .sort({ date: 'desc' })
+    .exec((err, doc)=>{
+        if(err) return res.status(400).json({msg: 'Could not reach blogs.'});
+        res.json(doc);
+    });
 });
 
 router.get('/:id', async (req, res)=>{
     const blog = await Blog.findById(req.params.id);
-    const comments = await Comment.find({ blogId: blog._id })
-    res.json({ blog, comments });
+    Comment.find({ blogId: blog._id })
+    .populate('ownerId')
+    .sort({ date: 'desc' })
+    .exec((err, doc)=>{
+        if(err) return res.status(400).json({msg: 'Could not reach comments.'});
+        res.json({ blog, comments: doc });
+    });
 });
 
-router.get('/:category', async (req, res)=>{
-    const blog = await Blog.findById(req.params.category);
-    res.json(blog);
+router.get('/category/:category', async (req, res)=>{
+    Blog.find({ category: req.params.category })
+    .sort({ date: 'desc' })
+    .populate('ownerId')
+    .exec((err, doc)=>{
+        if(err) return res.status(400).json({ msg: 'Could not find any blog with that category.' });
+        return res.json(doc);
+    });
 });
 
 router.post('/', auth, async (req, res)=>{
@@ -53,14 +75,22 @@ router.post('/', auth, async (req, res)=>{
 });
 
 router.put('/:id', [auth, isBlogOwner], async(req, res)=>{
-    const updateBlog = await Blog.findByIdAndUpdate(req.params.id, req.body);
-    const saveBlog = updateBlog.save();
-    res.json(saveBlog);
+    const updateBlog = await Blog.findByIdAndUpdate(req.params.id, { $set: req.body }, {new:true});
+    res.json(updateBlog);
 });
 
 router.delete('/:id', [auth, isBlogOwner], async(req, res)=>{
-    const removeBlog = await Blog.findByIdAndRemove(req.params.id);
-    res.json(removeBlog);
+    try{
+        const removeBlog = await Blog.findByIdAndRemove(req.params.id);
+        const removeComments =  await 
+                                Comment.find({ blogId: req.params.id })
+                                .map(item => {
+                                    item.remove();
+                                });
+        return res.json(removeBlog);
+    }catch(err){
+        return res.status(400).json({ msg: 'Could not delete blog' });    
+    }
 });
 
 router.post('/:id/comment', auth, async(req, res)=>{
@@ -73,16 +103,26 @@ router.post('/:id/comment', auth, async(req, res)=>{
     });
     const saveComment = await newComment.save();
 
-    res.json(saveComment);
+    Comment.findById(saveComment._id)
+    .populate('ownerId')
+    .exec((err, doc)=>{
+        if(err) res.status(400).json({msg: 'Could not add comment'});
+        res.json(doc);
+    });
 });
 
-router.put('/:id/comment/:commentId', [auth, isCommentOwner], async(req, res)=>{
-    const comment = await Comment.findOneAndUpdate({ _id: req.params.commentId }, req.body);
-    const updatedComment = await comment.save();
-    res.json(updatedComment);
+router.put('/comment/:commentId/edit', [auth, isCommentOwner], async(req, res)=>{
+    const comment = await Comment.findByIdAndUpdate(req.params.commentId, {$set: req.body}, {new: true});
+    Comment.findById(comment._id)
+    .sort({ date: 'desc' })
+    .populate('ownerId')
+    .exec((err, doc)=>{
+        if(err) return res.status(400).json({ msg: 'Could not get the comment.' });
+        return res.json(doc);
+    });
 });
 
-router.delete('/:id/comment/:commentId', [auth, isCommentOwner], async(req, res)=>{
+router.delete('/comment/delete/:commentId', [auth, isCommentOwner], async(req, res)=>{
     const comment = await Comment.findByIdAndRemove(req.params.commentId);
     res.json(comment);
 });
