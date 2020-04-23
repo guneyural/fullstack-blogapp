@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const authRoutes = require('./routes/auth');
 const categoryRoutes = require('./routes/category');
 const blogRoutes = require('./routes/blog');
+const path = require('path');
 const DATABASE = 'mongodb+srv://sennaber:webapp123@guney-xu6om.mongodb.net/test?retryWrites=true&w=majority';
 const PORT = 3002;
 
