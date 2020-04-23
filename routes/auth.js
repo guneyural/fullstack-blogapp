@@ -3,6 +3,7 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const auth = require('../middleware/auth');
+const Blog = require('../models/blog');
 
 router.post('/register', async (req, res) => {
     const {
@@ -10,7 +11,8 @@ router.post('/register', async (req, res) => {
         lastName,
         username,
         email,
-        password
+        password,
+        profileImage
     } = req.body;
 
     if(!firstName || !lastName || !username || !email || !password){
@@ -29,6 +31,7 @@ router.post('/register', async (req, res) => {
         firstName,
         lastName,
         username,
+        profileImage,
         email,
         password: hashedPassword
     });
@@ -66,6 +69,22 @@ router.post('/login', async (req, res) => {
 router.get('/', auth, async (req, res) => {
     const getUser = await User.findById(req.user.id);
     res.json(getUser);
+});
+
+router.get('/:id', (req, res)=>{
+    User.findById(req.params.id)
+    .then(user=>{
+        Blog.find({ ownerId: req.params.id })
+        .sort({ date: 'desc' })
+        .populate('ownerId')
+        .exec((err, blogs)=>{
+            if(err) return res.status(400).json({ msg: 'User not found.' });
+            return res.json({user, blogs});
+        });
+    })
+    .catch(err => {
+        return res.status(400).json({ msg: 'User not found' });
+    });
 });
 
 module.exports = router;

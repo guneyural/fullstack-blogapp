@@ -3,6 +3,7 @@ import {
     USER_LOADED,
     REGISTER_SUCCESS,
     LOGIN_SUCCESS,
+    GET_USER_BY_ID,
     LOGOUT_SUCCESS,
     AUTH_ERROR
 } from '../actions/types';
@@ -22,10 +23,10 @@ export const loadUser = () => (dispatch, getState) => {
     });
 };
 
-export const registerUser = (firstName, lastName, username, email, password) => dispatch => {
+export const registerUser = (firstName, lastName, username, email, password, profileImage) => dispatch => {
     dispatch({ type: USER_LOADING });
 
-    const body = {firstName, lastName, username, email, password};
+    const body = {firstName, lastName, username, email, password, profileImage};
 
     axios.post('/user/register', body)
     .then(user => {
@@ -49,6 +50,21 @@ export const loginUser = (email, password) => dispatch => {
     .catch(err => {
         dispatch(getErrors(err.response.data.msg, err.response.status));
         dispatch({ type: AUTH_ERROR });
+    });
+}
+
+export const getUserById = id => dispatch => {
+    dispatch({ type: USER_LOADING });
+
+    axios.get(`/user/${id}`)
+    .then(response => {
+        dispatch({
+            type: GET_USER_BY_ID,
+            payload: response.data
+        });
+    })
+    .catch(err => {
+        dispatch(getErrors(err.response.data.msg, err.response.status));
     });
 }
 

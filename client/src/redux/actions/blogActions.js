@@ -1,8 +1,10 @@
 import {
     BLOG_LOADING,
     BLOGS_LOADED,
+    SEARCH_BLOG,
     BLOG_LOADED,
     BLOGS_LOADED_BY_CATEGORY,
+    BLOGS_LOADED_BY_USER,
     ADD_BLOG,
     EDIT_BLOG,
     DELETE_BLOG,
@@ -29,6 +31,21 @@ export const loadBlogs = () => dispatch => {
     })
 }
 
+export const searchBlog = data => dispatch => {
+    dispatch({ type: BLOG_LOADING });
+
+    axios.get('/blog', { params: { search: data } })
+    .then(res => {
+        dispatch({
+            type: SEARCH_BLOG,
+            payload: res.data
+        });
+    })
+    .catch(err => {
+        dispatch(getErrors(err.response.data.msg, err.resposne.status));
+    });
+}
+
 export const loadBlogsByCategory = category => dispatch => {
     dispatch({ type: BLOG_LOADING });
 
@@ -43,6 +60,21 @@ export const loadBlogsByCategory = category => dispatch => {
         dispatch(getErrors(err.resposne.data.mgs, err.response.status));
     });
 };
+
+export const loadBlogsByUser = id => dispatch => {
+    dispatch({ type: BLOG_LOADING });
+
+    axios.get(`/blog/user/${id}/all`)
+    .then(response => {
+        dispatch({
+            type: BLOGS_LOADED_BY_USER,
+            payload: response.data
+        });
+    })
+    .catch(err => {
+        dispatch(getErrors(err.respnose.data.msg, err.respnose.status));
+    });
+}
 
 export const loadBlog = id => dispatch => {
     dispatch({ type: BLOG_LOADING });

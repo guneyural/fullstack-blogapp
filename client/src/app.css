@@ -1,0 +1,251 @@
+html {
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    margin: 0;
+}
+
+#search-bar {
+    background: #f0f0f0;
+    outline-style: none;
+    width: 100%;
+    border: 1px solid #f0f0f0;
+    border-radius: 15px;
+}
+
+.navbar form {
+    width: 75%;
+}
+
+#search-bar:focus {
+    background: white;
+    border: transparent;
+}
+
+#navbar-bottom {
+    overflow: hidden;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    box-shadow: 0px 8px 6px 6px black;
+    padding: 15px;
+    z-index: 1;
+}
+
+nav {
+    background-color: white;
+}
+
+#navbar-top {
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    box-shadow: 0px 4px 6px -6px black;
+    z-index: 1;
+}
+
+.navbar-brand h1 {
+    letter-spacing: 4px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #262626;
+    transition: 0.2s;
+    border-radius: 50px;
+}
+
+.navbar-brand h1:hover{
+    color: black;
+}
+
+.navbar span {
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #262626;
+    transition: 0.2s;
+    border-radius: 50px;
+}
+
+.nav-link:hover{
+    color: black;
+    background: #d1d1d1;
+}
+
+.blog-date-data {
+    float: right;
+}
+
+.blog-meta h1 {
+    font-size: 2.3rem;
+}
+
+.profileImg {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+.blog-card {
+    padding: 8px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px -6px black;
+    transition: 0.2s;
+    color: #262626;
+}
+
+#blogName {
+    font-size: 2.8rem;
+}
+
+.blog-card:hover{
+    background-color: #fafafa;
+}
+
+.blog-image {
+    border-radius: 5px;
+}
+
+.blog-content {
+    font-size: 22px;
+    margin-top: 25px;
+}
+
+hr {
+    border: none;
+    height: 1px;
+    color: #333; 
+    background-color: #333; 
+}
+
+option {
+    transition: 0.2s;
+}
+
+option:hover  {
+    background-color: white;
+}
+
+.topics {
+    border-bottom: 2px solid white;
+    padding: 5px;
+    transition: 0.2s;
+}
+
+.topics:hover{
+    background-color: #dedede;
+}
+
+.one-topic-page {
+    margin-top: 80px;
+    margin-bottom: 90px;
+}
+
+.add-blog-component {
+    margin-top: 80px;
+    margin-bottom: 90px;
+}
+
+#profileImage {
+    max-height: 120px;
+    border-radius: 50%;
+    margin-left: 25%;
+}
+
+#fullname {
+    font-size: 28px;
+    margin-left: 8%;
+}
+
+.user-blogs {
+    margin-top: auto;
+}
+
+@media screen and (max-width: 992px) {
+    .navbar span {
+      font-size: 22px;
+    }
+    #navbar-bottom {
+        padding: 8px;
+    }
+    .navbar form {
+        width: 60%;
+    }
+    
+    #profileImage {
+        max-height: 100px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .navbar span {
+        font-size: 16px;
+    }
+    #navbar-bottom {
+        padding: 6px;
+    }
+    .profileImg {
+        width: 30px;
+        height: 30px;
+    }
+    .navbar-brand h1 {
+        letter-spacing: 2px;
+        font-weight: bold;
+        font-size: 24px;
+    }
+    .navbar form {
+        width: 50%;
+    }
+
+    .blog-date-data {
+        font-size: 14px;
+    }
+
+    .blog-meta h1 {
+        font-size: 1.4rem;
+    }
+
+    #blogName {
+        font-size: 1.7rem;
+    }
+
+    .one-topic-page {
+        margin-top: 60px;
+    }
+    
+    .add-blog-component {
+        margin-top: 60px;
+    }
+
+    #profileImage {
+        max-height: 80px;
+    }
+
+    #fullname {
+        font-size: 22px;
+        margin-left: 10%;
+    }
+}
+
+@media screen and (max-width: 350px) {
+    .navbar span {
+        font-size: 13px;
+    }
+    #navbar-bottom {
+        padding: 4px;
+    }
+    .profileImg {
+        width: 30px;
+        height: 30px;
+    }
+    .blog-date-data {
+        font-size: 11px;
+    }
+    #blogName {
+        font-size: 1.4rem;
+    }
+}

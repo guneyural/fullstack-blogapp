@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const Blog = require('../models/blog');
 const Comment = require('../models/comment');
-const User = require('../models/user');
+const Category = require('../models/category');
 const auth = require('../middleware/auth');
 const isBlogOwner = require('../middleware/isBlogOwner');
 const isCommentOwner = require('../middleware/isCommentOwner');
@@ -9,39 +9,58 @@ const isCommentOwner = require('../middleware/isCommentOwner');
 router.get('/', async (req, res)=>{
     if(req.query.search){
         const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-        const getBlogs = await Blog.find({$or:[{title: regex},{description: regex}]}).sort({date: 'desc'});
-        if(getBlogs.length > 0){
-            getBlogs
-            .populate('ownerId')
-            .sort({ date: 'desc' })
-            .exec((err, doc)=>{
-                if(err) return err;
-                return res.json(doc);    
-            })
-        }else{
-            return res.json({msg: 'No blog found'});
-        }
+
+        Blog.find({$or:[{title: regex},{description: regex}]})
+        .sort({ date: 'desc' })
+        .populate('ownerId')
+        .exec((err, doc) => {
+            if(err) return res.status(400).json({msg: 'An error occured'});
+            if(doc.length > 0) {
+                return res.json(doc);
+            }
+            return res.json({ msg: 'No blog found' });
+        });
+    } else {
+        Blog
+        .find()
+        .populate('ownerId')
+        .sort({ date: 'descending' })
+        .exec((err, doc)=>{
+            if(err) return res.status(400).json({msg: 'Could not reach blogs.'});
+            return res.json(doc);
+        });
     }
-    
-    Blog
-    .find()
-    .populate('ownerId')
-    .sort({ date: 'desc' })
-    .exec((err, doc)=>{
-        if(err) return res.status(400).json({msg: 'Could not reach blogs.'});
-        res.json(doc);
-    });
 });
 
 router.get('/:id', async (req, res)=>{
-    const blog = await Blog.findById(req.params.id);
-    Comment.find({ blogId: blog._id })
+    Blog.findById(req.params.id)
     .populate('ownerId')
-    .sort({ date: 'desc' })
-    .exec((err, doc)=>{
+    .exec((err, blog)=>{
+        if(err) return res.status(400).json({ msg: 'Could not find the blog.' });
+        Comment.find({ blogId: blog._id })
+        .populate('ownerId')
+        .sort({ date: 'ascending' })
+        .exec((err, doc)=>{
         if(err) return res.status(400).json({msg: 'Could not reach comments.'});
         res.json({ blog, comments: doc });
     });
+    });
+});
+
+router.get('/user/:id/all', async (req, res)=>{
+    Blog.find({ ownerId: req.params.id })
+    .sort({ date: 'desc' })
+    .populate('ownerId')
+    .exec((err, blogs)=>{
+        if(err) return res.status(400).json({ msg: 'Could not get the blogs.' });
+        res.json(blogs);
+    });
+});
+
+router.get('/categories/all', async (req, res)=>{
+    Category.find()
+    .then(data=> res.json(data))
+    .catch(err=> res.status(400).json({ msg: 'Could not get the categories.' }))
 });
 
 router.get('/category/:category', async (req, res)=>{
@@ -113,7 +132,7 @@ router.post('/:id/comment', auth, async(req, res)=>{
 
 router.put('/comment/:commentId/edit', [auth, isCommentOwner], async(req, res)=>{
     const comment = await Comment.findByIdAndUpdate(req.params.commentId, {$set: req.body}, {new: true});
-    Comment.findById(comment._id)
+    Comment.findById(req.params.commentId)
     .sort({ date: 'desc' })
     .populate('ownerId')
     .exec((err, doc)=>{

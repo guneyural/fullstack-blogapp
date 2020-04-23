@@ -3,6 +3,7 @@ import {
     USER_LOADED,
     REGISTER_SUCCESS,
     LOGIN_SUCCESS,
+    GET_USER_BY_ID,
     LOGOUT_SUCCESS,
     AUTH_ERROR
  } from '../actions/types';
@@ -11,6 +12,7 @@ const initialState = {
     token: localStorage.getItem('token'),
     isAuthenticated: false,
     loading: false,
+    visitedProfile: {},
     user: null
 };
 
@@ -45,6 +47,12 @@ export default function(state = initialState, action) {
                 isAuthenticated: false,
                 loading: false,
                 user: null
+            }
+        case GET_USER_BY_ID:
+            return {
+                ...state,
+                loading: false,
+                visitedProfile: {...action.payload}
             }
         default:
             return state

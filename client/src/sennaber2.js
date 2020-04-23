@@ -11,7 +11,7 @@ class Sennaber extends Component {
     }
 
     componentDidMount() {
-        this.props.loadBlog("5e971010f7d7043300f9b1a8");
+        this.props.loadBlog("5e97048e3b6e3110556fe7b0");
     }
 
     handleChange = (e) => {

@@ -1,8 +1,10 @@
 import {
     BLOG_LOADING,
     BLOGS_LOADED,
+    SEARCH_BLOG,
     BLOG_LOADED,
     BLOGS_LOADED_BY_CATEGORY,
+    BLOGS_LOADED_BY_USER,
     ADD_BLOG,
     EDIT_BLOG,
     DELETE_BLOG,
@@ -30,6 +32,12 @@ export default function(state = initialState, action) {
                 blogs: action.payload,
                 isLoading: false
             }
+        case SEARCH_BLOG:
+            return {
+                ...state,
+                blogs: action.payload,
+                isLoading: false
+            }
         case BLOG_LOADED:
             return {
                 ...state,
@@ -37,6 +45,12 @@ export default function(state = initialState, action) {
                 blog: {blog: action.payload.blog, comments: action.payload.comments}
             }
         case BLOGS_LOADED_BY_CATEGORY:
+            return {
+                ...state,
+                isLoading: false,
+                blogs: action.payload
+            }
+        case BLOGS_LOADED_BY_USER: 
             return {
                 ...state,
                 isLoading: false,
