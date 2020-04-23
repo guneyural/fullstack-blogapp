@@ -18,7 +18,7 @@ import axios from 'axios';
 export const loadBlogs = () => dispatch => {
     dispatch({ type: BLOG_LOADING });
 
-    axios.get('/blog', { headers: { "Content-Type": "application/json"}})
+    axios.get('/api/blog', { headers: { "Content-Type": "application/json"}})
     .then(res=>{
         console.log(res.data);
         dispatch({ 
@@ -34,7 +34,7 @@ export const loadBlogs = () => dispatch => {
 export const searchBlog = data => dispatch => {
     dispatch({ type: BLOG_LOADING });
 
-    axios.get('/blog', { params: { search: data } })
+    axios.get('/api/blog', { params: { search: data } })
     .then(res => {
         dispatch({
             type: SEARCH_BLOG,
@@ -49,7 +49,7 @@ export const searchBlog = data => dispatch => {
 export const loadBlogsByCategory = category => dispatch => {
     dispatch({ type: BLOG_LOADING });
 
-    axios.get(`/blog/category/${category}`)
+    axios.get(`/api/blog/category/${category}`)
     .then(res=>{
         dispatch({
             type: BLOGS_LOADED_BY_CATEGORY,
@@ -64,7 +64,7 @@ export const loadBlogsByCategory = category => dispatch => {
 export const loadBlogsByUser = id => dispatch => {
     dispatch({ type: BLOG_LOADING });
 
-    axios.get(`/blog/user/${id}/all`)
+    axios.get(`/api/blog/user/${id}/all`)
     .then(response => {
         dispatch({
             type: BLOGS_LOADED_BY_USER,
@@ -79,7 +79,7 @@ export const loadBlogsByUser = id => dispatch => {
 export const loadBlog = id => dispatch => {
     dispatch({ type: BLOG_LOADING });
 
-    axios.get(`/blog/${id}`)
+    axios.get(`/api/blog/${id}`)
     .then(res=>{
         dispatch({
             type: BLOG_LOADED,
@@ -96,7 +96,7 @@ export const addBlog = ({title, text, image, category}) => (dispatch, getState) 
 
     const body = {title, text, image, category};
 
-    axios.post('/blog', body, tokenConfig(getState))
+    axios.post('/api/blog', body, tokenConfig(getState))
     .then(res=>{
         dispatch({
             type: ADD_BLOG,
@@ -113,7 +113,7 @@ export const editBlog = ({ title, text, image, category }, id) => (dispatch, get
 
     const body = { title, text, image, category };
 
-    axios.put(`/blog/${id}`, body, tokenConfig(getState))
+    axios.put(`/api/blog/${id}`, body, tokenConfig(getState))
     .then(res=>{
         dispatch({
             type: EDIT_BLOG,
@@ -128,7 +128,7 @@ export const editBlog = ({ title, text, image, category }, id) => (dispatch, get
 export const deleteBlog = id  => (dispatch, getState) => {
     dispatch({ type: BLOG_LOADING });
 
-    axios.delete(`/blog/${id}`, tokenConfig(getState))
+    axios.delete(`/api/blog/${id}`, tokenConfig(getState))
     .then(res=>{
         console.log(res.data);
         dispatch({
@@ -146,7 +146,7 @@ export const addComment = (body, id) => (dispatch, getState) => {
 
     const data = {body};
 
-    axios.post(`/blog/${id}/comment`, data, tokenConfig(getState))
+    axios.post(`/api/blog/${id}/comment`, data, tokenConfig(getState))
     .then(res=>{
         dispatch({
             type: ADD_COMMENT,
@@ -163,7 +163,7 @@ export const editComment = (body, commentId) => (dispatch, getState) => {
 
     const data = {body};
 
-    axios.put(`/blog/comment/${commentId}/edit`, data, tokenConfig(getState))
+    axios.put(`/api/blog/comment/${commentId}/edit`, data, tokenConfig(getState))
     .then(res=>{
         dispatch({
             type: EDIT_COMMENT,
@@ -178,7 +178,7 @@ export const editComment = (body, commentId) => (dispatch, getState) => {
 export const deleteComment = commentId => (dispatch, getState) => {
     dispatch({ type: BLOG_LOADING });
 
-    axios.delete(`/blog/comment/delete/${commentId}`, tokenConfig(getState))
+    axios.delete(`/api/blog/comment/delete/${commentId}`, tokenConfig(getState))
     .then(res=>{
         dispatch({
             type: DELETE_COMMENT,

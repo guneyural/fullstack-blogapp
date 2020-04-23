@@ -8,7 +8,7 @@ import { getErrors } from './errorActions';
 export const getCategories = () => dispatch => {
     dispatch({ type: CATEGORY_LOADING });
 
-    axios.get('/blog/categories/all')
+    axios.get('/api/blog/categories/all')
     .then(response=>{
         const categories = response.data.map(item=> item.category);
 

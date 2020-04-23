@@ -13,7 +13,7 @@ import axios from 'axios';
 export const loadUser = () => (dispatch, getState) => {
     dispatch({ type: USER_LOADING });
 
-    axios.get('/user', tokenConfig(getState))
+    axios.get('/api/user', tokenConfig(getState))
     .then(user=>{
         dispatch({ type: USER_LOADED, payload: user.data });
     })  
@@ -28,7 +28,7 @@ export const registerUser = (firstName, lastName, username, email, password, pro
 
     const body = {firstName, lastName, username, email, password, profileImage};
 
-    axios.post('/user/register', body)
+    axios.post('/api/user/register', body)
     .then(user => {
         dispatch({ type: REGISTER_SUCCESS, payload: {token: user.data.token, user: user.data.user} })
     })
@@ -43,7 +43,7 @@ export const loginUser = (email, password) => dispatch => {
 
     const body = {email, password};
     
-    axios.post('/user/login', body)
+    axios.post('/api/user/login', body)
     .then(user => {
         dispatch({ type: LOGIN_SUCCESS, payload: {token: user.data.token, user: user.data.user} });
     })
@@ -56,7 +56,7 @@ export const loginUser = (email, password) => dispatch => {
 export const getUserById = id => dispatch => {
     dispatch({ type: USER_LOADING });
 
-    axios.get(`/user/${id}`)
+    axios.get(`/api/user/${id}`)
     .then(response => {
         dispatch({
             type: GET_USER_BY_ID,
