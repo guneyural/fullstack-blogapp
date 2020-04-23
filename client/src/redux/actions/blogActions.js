@@ -18,7 +18,7 @@ import axios from 'axios';
 export const loadBlogs = () => dispatch => {
     dispatch({ type: BLOG_LOADING });
 
-    axios.get('/blog')
+    axios.get('/blog', { headers: { "Content-Type": "application/json"}})
     .then(res=>{
         console.log(res.data);
         dispatch({ 
