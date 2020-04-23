@@ -37,7 +37,7 @@ router.post('/register', async (req, res) => {
     });
     const saveUser = await newUser.save();
 
-    const token = jwt.sign({ id: saveUser._id }, process.env.SECRET, { expiresIn: '5d' });
+    const token = jwt.sign({ id: saveUser._id }, 'xFiles', { expiresIn: '5d' });
 
     res.json({token, user: saveUser});
 });
@@ -58,7 +58,7 @@ router.post('/login', async (req, res) => {
     const compare = bcrypt.compare(password, findUser.password);
     if(!compare) return res.status(400).json({msg: 'email or password is wrong'});
 
-    const token = jwt.sign({ id: findUser._id }, process.env.SECRET, { expiresIn: '5d' });
+    const token = jwt.sign({ id: findUser._id }, 'xFiles', { expiresIn: '5d' });
 
     res.json({
         token,

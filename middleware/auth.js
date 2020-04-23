@@ -8,7 +8,7 @@ module.exports = async function (req, res, next) {
     }
     
     try{
-        const decoded = jwt.verify(token, process.env.SECRET);
+        const decoded = jwt.verify(token, 'xFiles');
         req.user = decoded;
         next();
     }catch(err){

@@ -3,11 +3,13 @@ const mongoose = require('mongoose');
 const authRoutes = require('./routes/auth');
 const categoryRoutes = require('./routes/category');
 const blogRoutes = require('./routes/blog');
+const DATABASE = 'mongodb+srv://sennaber:webapp123@guney-xu6om.mongodb.net/test?retryWrites=true&w=majority';
+const PORT = 3002;
 
 require('dotenv').config();
 app.use(require('express').json());
 
-mongoose.connect(process.env.DATABASE, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: true })
+mongoose.connect(DATABASE, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: true })
 .then(() => console.log('Connected to database'))
 .catch(() => console.log('Could not connect to database'));
 
@@ -23,6 +25,6 @@ if(process.env.NODE_ENV === "production") {
     });
 }
 
-app.listen(process.env.PORT, ()=>{
+app.listen(PORT, ()=>{
     console.log(`Server started on port ${process.env.PORT}`);
 });
