@@ -44,7 +44,7 @@ class AddBlog extends Component {
 
         this.props.addBlog(data);
         setTimeout(() => {
-            window.location.replace("http://localhost:3000/");
+            window.location.replace(window.location.origin);
         }, 500);
     }
 

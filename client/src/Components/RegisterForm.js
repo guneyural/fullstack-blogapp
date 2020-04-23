@@ -31,7 +31,7 @@ class RegisterForm extends Component {
     render() {
         const { user } = this.props;
         if(user.isAuthenticated) {
-            window.location.href = "http://localhost:3000/";
+            window.location.href = window.location.origin;
         }
 
         return (

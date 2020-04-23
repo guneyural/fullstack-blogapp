@@ -49,7 +49,7 @@ class EditBlog extends Component {
 
         this.props.editBlog(data, this.props.blogId);
         setTimeout(() => {
-            window.location.replace("http://localhost:3000/blog/"+this.props.blogId);
+            window.location.replace(window.location.origin+"/"+this.props.blogId);
         }, 100);
     }
     

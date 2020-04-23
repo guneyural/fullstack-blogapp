@@ -62,7 +62,7 @@ class SingleBlog extends Component {
     deleteBlog = id => {
         this.props.deleteBlog(id);
         setTimeout(()=> {
-            window.location.replace("http://localhost:3000");
+            window.location.replace(window.location.origin);
         },100);
     }
 
